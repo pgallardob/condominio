@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Propietarios - Condominio Las Flores III</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../index.html">
+                <i class="bi bi-building"></i> Condominio Las Flores III
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="propietarios.html"><i class="bi bi-people"></i> Propietarios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pagos.html"><i class="bi bi-cash-coin"></i> Pagos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="egresos.html"><i class="bi bi-cart"></i> Egresos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="empleados.html"><i class="bi bi-person-badge"></i> Empleados</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="reportes.html"><i class="bi bi-file-earmark-bar-graph"></i> Reportes</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-3">
+        <div id="alertContainer"></div>
+    </div>
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-12 mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2><i class="bi bi-people"></i> Gestión de Propietarios</h2>
+                        <p class="text-muted">Módulo de Administración de Propietarios Las Flores III</p>
+                    </div>
+                    <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#modalPropietario">
+                        <i class="bi bi-plus-circle"></i> Nuevo Propietario
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <label for="filtroRut" class="form-label">Buscar por RUT</label>
+                <input type="text" id="filtroRut" class="form-control rut-input" placeholder="12.345.678-9">
+            </div>
+            <div class="col-md-2">
+                <label for="filtroCasa" class="form-label">Número de Casa</label>
+                <select id="filtroCasa" class="form-select">
+                    <option value="">Todas</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="filtroNombre" class="form-label">Buscar por Nombre</label>
+                <input type="text" id="filtroNombre" class="form-control" placeholder="Nombre o apellido">
+            </div>
+            <div class="col-md-2">
+                <label for="filtroEstado" class="form-label">Estado</label>
+                <select id="filtroEstado" class="form-select">
+                    <option value="">Todos</option>
+                    <option value="activo" selected>Activos</option>
+                    <option value="inactivo">Inactivos</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <div class="d-flex w-100 gap-2">
+                    <button type="button" id="btnFiltrar" class="btn btn-primary w-50">
+                        <i class="bi bi-search"></i> Filtrar
+                    </button>
+
+                    <button type="button" id="btnLimpiar" class="btn btn-secondary w-50">
+                        Limpiar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-table"></i> Listado de Propietarios</span>
+                        <button type="button" id="btnExportar" class="btn btn-light btn-sm">
+                            <i class="bi bi-file-earmark-excel"></i> Exportar a Excel
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped" id="tablaPropietarios">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Casa</th>
+                                        <th>RUT</th>
+                                        <th>Nombre Completo</th>
+                                        <th>Email</th>
+                                        <th>Teléfono</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyPropietarios">
+                                    <tr>
+                                        <td colspan="7" class="text-center">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">Cargando...</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div>
+                                <span id="infoPaginacion" class="text-muted">Mostrando 0 de 0 registros</span>
+                            </div>
+                            <nav>
+                                <ul class="pagination mb-0" id="paginacion"></ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalPropietario" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modalTitulo">
+                        <i class="bi bi-person-plus"></i> Nuevo Propietario
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formPropietario">
+                        <input type="hidden" id="accion" value="crear">
+                        <input type="hidden" id="rutOriginal" value="">
+                        <!-- Hidden id_propietario -->
+                        <input type="hidden" id="id_propietario" value="">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="rut" class="form-label">RUT <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control rut-input" id="rut" required placeholder="12.345.678-9" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="numCasa" class="form-label">Número de Casa <span class="text-danger">*</span></label>
+                                <select class="form-select" id="numCasa" required>
+                                    <option value="">Seleccione casa</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="nombre" required placeholder="Juan">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="apellidoPaterno" class="form-label">Apellido Paterno <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="apellidoPaterno" required placeholder="Pérez">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="apellidoMaterno" class="form-label">Apellido Materno</label>
+                                <input type="text" class="form-control" id="apellidoMaterno" placeholder="González">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" placeholder="correo@ejemplo.com">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="telefono1" class="form-label">Teléfono 1</label>
+                                <input type="tel" class="form-control" id="telefono1" placeholder="+56912345678">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="telefono2" class="form-label">Teléfono 2</label>
+                                <input type="tel" class="form-control" id="telefono2" placeholder="+56987654321">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label for="estado" class="form-label">Estado</label>
+
+                                <select id="estado" class="form-select">
+                                    <option value="activo" selected>Activo</option>
+                                    <option value="inactivo">Inactivo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalEliminar" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title"><i class="bi bi-trash"></i> Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close btn-close-white"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Está seguro que desea eliminar este propietario?</p>
+                    <p class="fw-bold" id="propietarioEliminar"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="btnConfirmarEliminar">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/propietarios.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.19.1/package/dist/xlsx.full.min.js"></script>
+
+</body>
+</html>

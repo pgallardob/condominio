@@ -1,0 +1,205 @@
+<!-- pages/dashboard.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Las Flores III</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Tu CSS personalizado, si lo tienes en /assets/css/custom.css -->
+  <link href="../assets/css/custom.css" rel="stylesheet">
+</head>
+<body>
+<div class="container-fluid mt-4">
+  <div class="row">
+    <div class="col-12 mb-4">
+      <h2><i class="bi bi-speedometer2"></i> Panel principal Las Flores III</h2>
+      <p class="text-muted">Resumen financiero del condominio</p>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <div class="card shadow">
+        <div class="card-body">
+          <form class="row align-items-end g-3">
+            <div class="col-md-3">
+              <label for="filtroMes" class="form-label">Mes</label>
+              <select id="filtroMes" class="form-select"></select>
+            </div>
+            <div class="col-md-3">
+              <label for="filtroAnio" class="form-label">Año</label>
+              <select id="filtroAnio" class="form-select"></select>
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+              <button type="button" id="btnFiltrar" class="btn btn-primary">
+                <i class="bi bi-search"></i> Filtrar
+              </button>
+              <button type="button" id="btnLimpiar" class="btn btn-outline-secondary">
+                <i class="bi bi-x-circle"></i> Limpiar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-md-3 mb-3">
+      <div class="card border-success shadow">
+        <div class="card-body text-center">
+          <i class="bi bi-arrow-down-circle text-success" style="font-size:3rem;"></i>
+          <h6 class="card-title mt-2">Ingresos del Periodo</h6>
+          <h3 class="text-success" id="totalIngresos">$0</h3>
+          <small class="text-muted" id="textoIngresos">0 pagos recibidos</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <div class="card border-danger shadow">
+        <div class="card-body text-center">
+          <i class="bi bi-arrow-up-circle text-danger" style="font-size:3rem;"></i>
+          <h6 class="card-title mt-2">Egresos del Periodo</h6>
+          <h3 class="text-danger" id="totalEgresos">$0</h3>
+          <small class="text-muted" id="textoEgresos">0 gastos registrados</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <div class="card border-primary shadow">
+        <div class="card-body text-center">
+          <i class="bi bi-wallet2 text-primary" style="font-size:3rem;"></i>
+          <h6 class="card-title mt-2">Saldo del Periodo</h6>
+          <h3 class="text-primary" id="saldoPeriodo">$0</h3>
+          <small class="text-muted">Ingresos - Egresos</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <div class="card border-warning shadow">
+        <div class="card-body text-center">
+          <i class="bi bi-exclamation-triangle text-warning" style="font-size:3rem;"></i>
+          <h6 class="card-title mt-2">Propietarios Morosos</h6>
+          <h3 class="text-warning" id="totalMorosos">0</h3>
+          <small class="text-muted" id="textoMorosos">Deuda: $0</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white fw-bold">
+          <i class="bi bi-pie-chart"></i> Estado de Pagos del Periodo
+        </div>
+        <div class="card-body">
+          <canvas id="chartPagos" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="card shadow">
+        <div class="card-header bg-info text-white fw-bold">
+          <i class="bi bi-bar-chart"></i> Egresos por Categoría
+        </div>
+        <div class="card-body">
+          <canvas id="chartEgresos" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <div class="card shadow">
+        <div class="card-header bg-success text-white fw-bold">
+          <i class="bi bi-clock-history"></i> Últimos 5 Pagos
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-sm table-hover">
+              <thead>
+                <tr>
+                  <th>Casa</th>
+                  <th>Propietario</th>
+                  <th>Monto</th>
+                  <th>Fecha</th>
+                </tr>
+              </thead>
+              <tbody id="ultimosPagos">
+                <tr>
+                  <td colspan="4" class="text-center text-muted">Cargando...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="card shadow">
+        <div class="card-header bg-danger text-white fw-bold">
+          <i class="bi bi-clock-history"></i> Últimos 5 Egresos
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-sm table-hover">
+              <thead>
+                <tr>
+                  <th>Categoría</th>
+                  <th>Descripción</th>
+                  <th>Monto</th>
+                  <th>Fecha</th>
+                </tr>
+              </thead>
+              <tbody id="ultimosEgresos">
+                <tr>
+                  <td colspan="4" class="text-center text-muted">Cargando...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" id="seccionMorosos" style="display: none;">
+    <div class="col-md-12 mb-4">
+      <div class="card border-warning shadow">
+        <div class="card-header bg-warning fw-bold">
+          <i class="bi bi-exclamation-triangle"></i> Propietarios con Pagos Pendientes
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Casa</th>
+                  <th>Propietario</th>
+                  <th>Teléfono</th>
+                  <th>Meses Adeudados</th>
+                  <th>Deuda Total</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody id="tablaMorosos"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Agrega aquí tus scripts JS extra -->
+</body>
+</html>
+

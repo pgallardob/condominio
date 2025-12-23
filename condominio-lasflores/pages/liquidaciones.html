@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liquidaciones - Condominio Las Flores III</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../index.html">
+                <i class="bi bi-building"></i> Condominio Las Flores III
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="propietarios.html"><i class="bi bi-people"></i> Propietarios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pagos.html"><i class="bi bi-cash-coin"></i> Pagos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="egresos.html"><i class="bi bi-cart"></i> Egresos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="empleados.html"><i class="bi bi-person-badge"></i> Empleados</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="liquidaciones.html"><i class="bi bi-receipt"></i> Liquidaciones</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="reportes.html"><i class="bi bi-file-earmark-bar-graph"></i> Reportes</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-3">
+        <div id="alertContainer"></div>
+    </div>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-12 mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2><i class="bi bi-receipt"></i> Liquidaciones de Sueldo</h2>
+                        <p class="text-muted">Gestión de liquidaciones de empleados</p>
+                    </div>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalLiquidacion">
+                        <i class="bi bi-plus-circle"></i> Nueva Liquidación
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form class="row align-items-end g-3">
+                            <div class="col-md-3">
+                                <label for="filtroEmpleado" class="form-label">Empleado</label>
+                                <select id="filtroEmpleado" class="form-select">
+                                    <option value="">Todos</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="filtroMes" class="form-label">Mes</label>
+                                <select id="filtroMes" class="form-select"></select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="filtroAnio" class="form-label">Año</label>
+                                <select id="filtroAnio" class="form-select"></select>
+                            </div>
+                            <div class="col-md-3 d-flex gap-2">
+                                <button type="button" id="btnFiltrar" class="btn btn-primary">
+                                    <i class="bi bi-search"></i> Filtrar
+                                </button>
+                                <button type="button" id="btnLimpiar" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Limpiar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card border-success">
+                    <div class="card-body text-center">
+                        <i class="bi bi-cash-coin text-success" style="font-size: 3rem;"></i>
+                        <h6 class="card-title mt-2">Total Pagado</h6>
+                        <h3 class="text-success" id="totalPagado">$0</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-primary">
+                    <div class="card-body text-center">
+                        <i class="bi bi-people text-primary" style="font-size: 3rem;"></i>
+                        <h6 class="card-title mt-2">Empleados Activos</h6>
+                        <h3 class="text-primary" id="totalEmpleados">0</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-info">
+                    <div class="card-body text-center">
+                        <i class="bi bi-receipt text-info" style="font-size: 3rem;"></i>
+                        <h6 class="card-title mt-2">Liquidaciones</h6>
+                        <h3 class="text-info" id="totalLiquidaciones">0</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <i class="bi bi-list-ul"></i> Listado de Liquidaciones
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Empleado</th>
+                                        <th>RUT</th>
+                                        <th>Periodo</th>
+                                        <th>Sueldo Base</th>
+                                        <th>Bonos</th>
+                                        <th>Descuentos</th>
+                                        <th>Líquido</th>
+                                        <th>Fecha Pago</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaLiquidaciones">
+                                    <tr>
+                                        <td colspan="10" class="text-center text-muted">
+                                            Cargando datos...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalLiquidacion" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="bi bi-plus-circle"></i> Nueva Liquidación
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formLiquidacion">
+                        <input type="hidden" id="liquidacionId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="idEmpleado" class="form-label">Empleado *</label>
+                                <select class="form-select" id="idEmpleado" required>
+                                    <option value="">Seleccione empleado...</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="mes" class="form-label">Mes *</label>
+                                <select class="form-select" id="mes" required></select>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="anio" class="form-label">Año *</label>
+                                <select class="form-select" id="anio" required></select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="sueldoBase" class="form-label">Sueldo Base *</label>
+                                <input type="number" class="form-control" id="sueldoBase" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="bonos" class="form-label">Bonos</label>
+                                <input type="number" class="form-control" id="bonos" value="0">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="horasExtra" class="form-label">Horas Extra</label>
+                                <input type="number" class="form-control" id="horasExtra" value="0">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="afp" class="form-label">AFP (12.5%)</label>
+                                <input type="number" class="form-control" id="afp" readonly>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="salud" class="form-label">Salud (7%)</label>
+                                <input type="number" class="form-control" id="salud" readonly>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="otrosDescuentos" class="form-label">Otros Descuentos</label>
+                                <input type="number" class="form-control" id="otrosDescuentos" value="0">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="totalImponible" class="form-label">Total Imponible</label>
+                                <input type="number" class="form-control" id="totalImponible" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="liquidoPagar" class="form-label fw-bold">Líquido a Pagar</label>
+                                <input type="number" class="form-control fw-bold" id="liquidoPagar" readonly>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fechaPago" class="form-label">Fecha de Pago *</label>
+                            <input type="date" class="form-control" id="fechaPago" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="observaciones" class="form-label">Observaciones</label>
+                            <textarea class="form-control" id="observaciones" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btnGuardarLiquidacion">
+                        <i class="bi bi-save"></i> Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="bg-light text-center py-3 mt-5">
+        <p class="text-muted mb-0">Condominio Las Flores III - Software de Gestión © 2025 - Desarrollado por PGallardo</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/liquidaciones.js"></script>
+</body>
+</html>
